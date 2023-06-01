@@ -20,7 +20,11 @@ export class TasksService {
   }
 
   getTask(id: string): Task {
-    return this.tasks.find((task) => task.id === id);
+    const found = this.tasks.find((task) => task.id === id);
+    if (!found) {
+      throw new Error('Task not found');
+    }
+    return found;
   }
 
   getTasksWithFilters(filterTaskDto: FilterTaskDto): Task[] {
@@ -52,7 +56,10 @@ export class TasksService {
   }
 
   deleteTask(id: string): void {
-    this.tasks = this.tasks.filter((task) => task.id !== id);
+    const found = this.getTask(id);
+    if (found) {
+      this.tasks = this.tasks.filter((task) => task.id !== id);
+    }
   }
 
   updateTaskStatus(id: string, status: TaskStatus): Task {
